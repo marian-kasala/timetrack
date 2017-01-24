@@ -18,6 +18,7 @@
 			var restUrl = 'rest/records';
 			
 		    $('#container').puipanel();
+		    $('#idmessage').puimessages();
 		    
 		    $('#dlg').puidialog({
 		        minimizable: false,
@@ -88,7 +89,10 @@
 							var page = $('#tbltimetracker').puidatatable('getPaginator').puipaginator('option', 'page');
 							$('#tbltimetracker').puidatatable('setTotalRecords', ui.first + ui.rows + 1);
 							$('#tbltimetracker').puidatatable('getPaginator').puipaginator('setPage', page, true);
-						}
+						},
+						error: function (request, status, error) {
+					        $('#idmessage').puimessages('show', 'error', {summary: error, detail: request.responseText } );
+					    }
 					});
 				}
 			});
@@ -102,6 +106,7 @@
 		<button id="id_create_btn" type="button">Create New Record</button>
 		<br/><br/>
 		<div id="tbltimetracker"></div>
+		<div id="idmessage"></div>
 	</div>
 	
 	<div id="dlg" title="Create New Record">

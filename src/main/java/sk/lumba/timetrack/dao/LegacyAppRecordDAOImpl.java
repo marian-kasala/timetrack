@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import sk.lumba.timetrack.domain.TimeRecord;
+import sk.lumba.timetrack.exception.LegacyApplException;
 
 public class LegacyAppRecordDAOImpl implements RecordDAO {
 
@@ -34,9 +35,12 @@ public class LegacyAppRecordDAOImpl implements RecordDAO {
 	    if (email != null) {
 	    	builder.queryParam("email", email);
 	    }
-	    
-	    TimeRecord[] result = restTemplate.getForObject(builder.build().encode().toUri(), TimeRecord[].class);
-	    return Arrays.asList(result);
+	    try {
+		    TimeRecord[] result = restTemplate.getForObject(builder.build().encode().toUri(), TimeRecord[].class);
+		    return Arrays.asList(result);
+	    } catch (Exception e) {
+	    	throw new LegacyApplException(e.getMessage(), e);	    	
+	    }
 	}
 
 	@Override
@@ -53,7 +57,11 @@ public class LegacyAppRecordDAOImpl implements RecordDAO {
 		
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-		restTemplate.postForEntity(legacyRestUrl, request , String.class);
+		try {
+			restTemplate.postForEntity(legacyRestUrl, request , String.class);
+		} catch (Exception e) {
+	    	throw new LegacyApplException(e.getMessage(), e);	    	
+	    }
 	}
-
+	
 }
