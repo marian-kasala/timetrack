@@ -9,9 +9,12 @@
 <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
 <link rel="stylesheet" href="css/jquery-ui.css" />
 <link rel="stylesheet" href="css/primeui.min.css" />
+<link rel="stylesheet" href="css/timetrack.css" />
 <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/primeui.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+
 <script type="text/javascript">
 		$(function() {
 			var email;
@@ -24,7 +27,7 @@
 		        minimizable: false,
 		        maximizable: false,
 		        responsive: true,
-		        width: 400,
+		        width: 540,
 		        minWidth: 300,
 		        modal: true,
 		        buttons: [
@@ -39,8 +42,10 @@
 		                text: 'Save',
 		                icon: 'fa-check',
 		                click: function() {
-		                	$("#id_create_form").submit();
-		                    $('#dlg').puidialog('hide');
+		                	if ($("#id_create_form").valid()) {
+			                	$("#id_create_form").submit();
+			                    $('#dlg').puidialog('hide');
+		                	}
 		                }
 		            }
 		        ]
@@ -87,7 +92,7 @@
 							
 							// little hack because I don't know the total record count
 							var page = $('#tbltimetracker').puidatatable('getPaginator').puipaginator('option', 'page');
-							$('#tbltimetracker').puidatatable('setTotalRecords', ui.first + ui.rows + 1);
+							$('#tbltimetracker').puidatatable('setTotalRecords', ui.first + 11);
 							$('#tbltimetracker').puidatatable('getPaginator').puipaginator('setPage', page, true);
 						},
 						error: function (request, status, error) {
@@ -96,6 +101,21 @@
 					});
 				}
 			});
+			
+			$.validator.addMethod("dateFormat", function(value) {
+			    var regex = /^([1-9]|0[1-9]|[12][0-9]|3[01])\.([1-9]|0[1-9]|1[012])\.(19|20)\d\d\s([01]\d|2[0-3]):([0-5]\d)$/;
+			    return regex.test(value);
+
+			}, 'Invalid format'); 
+			
+			$("#id_create_form").validate({
+			    rules: {
+			    	start : {required:true, dateFormat:true},
+			    	end : {required:true, dateFormat:true},
+			    	email: {required:true}
+			    }
+			});
+			
 		});
 </script>
 </head>
