@@ -3,6 +3,8 @@ package sk.lumba.timetrack.dao;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,11 +18,14 @@ import sk.lumba.timetrack.exception.LegacyApplException;
 
 public class LegacyAppRecordDAOImpl implements RecordDAO {
 
+	private static final Logger logger = LoggerFactory.getLogger(LegacyAppRecordDAOImpl.class);
+	
 	private static final String DEFAULT_LEGACY_REST_URL = "http://192.168.2.200:8080/records";
 	
 	private final String legacyRestUrl;
 	
 	public LegacyAppRecordDAOImpl(String legacyRestUrl) {
+		logger.info("legacyRestUrl from env: {}", legacyRestUrl);
 		this.legacyRestUrl = (legacyRestUrl != null) ? legacyRestUrl : DEFAULT_LEGACY_REST_URL;
 	}
 	
@@ -39,6 +44,7 @@ public class LegacyAppRecordDAOImpl implements RecordDAO {
 		    TimeRecord[] result = restTemplate.getForObject(builder.build().encode().toUri(), TimeRecord[].class);
 		    return Arrays.asList(result);
 	    } catch (Exception e) {
+	    	logger.error("Error by accesing legacy application.", e);
 	    	throw new LegacyApplException(e.getMessage(), e);	    	
 	    }
 	}
@@ -60,6 +66,7 @@ public class LegacyAppRecordDAOImpl implements RecordDAO {
 		try {
 			restTemplate.postForEntity(legacyRestUrl, request , String.class);
 		} catch (Exception e) {
+			logger.error("Error by accesing legacy application.", e);
 	    	throw new LegacyApplException(e.getMessage(), e);	    	
 	    }
 	}
