@@ -11,7 +11,6 @@ $(function() {
         responsive: true,
         width: 540,
         minWidth: 300,
-        modal: true,
         buttons: [
 			{
 			    text: 'Cancel',

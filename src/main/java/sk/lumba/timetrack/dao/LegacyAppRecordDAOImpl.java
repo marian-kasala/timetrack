@@ -20,7 +20,7 @@ public class LegacyAppRecordDAOImpl implements RecordDAO {
 
 	private static final Logger logger = LoggerFactory.getLogger(LegacyAppRecordDAOImpl.class);
 	
-	private static final String DEFAULT_LEGACY_REST_URL = "http://192.168.2.200:8080/records";
+	private static final String DEFAULT_LEGACY_REST_URL = "http://timetrack-legacy:8080/records";
 	
 	private final String legacyRestUrl;
 	
